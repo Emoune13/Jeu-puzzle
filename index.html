@@ -12,7 +12,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#c0a882">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -72,8 +72,7 @@ input:not([type=checkbox]):not([type=file]){font:inherit;color:var(--fg);backgro
 .card small{color:var(--ac)}
 .av{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:13px;margin-right:6px;vertical-align:middle}
 .av.big{width:56px;height:56px;font-size:26px;margin:0}
-.ct{position:relative}.dl{position:absolute;top:6px;right:6px;width:32px;height:32px;display:grid;place-items:center;background:var(--card);border:1px solid var(--bd);border-radius:50%}
-.dl:hover{border-color:var(--ac2)}
+.mp{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)}.mp img{width:64px;height:64px;object-fit:cover;border-radius:8px}.mp span{flex:1;text-align:left}
 .rec{border-collapse:collapse;width:100%;font-size:14px}.rec th,.rec td{padding:6px 10px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap}
 </style>
 </head>
@@ -181,11 +180,11 @@ async function home(){
 }
 async function libView(x){
   const src=await get('img:'+x.id);
-  openMod(`${src?`<img src="${src}" alt="Puzzle terminé">`:''}<p>${x.n} pièces · ${fmt(x.time)} · ${new Date(x.date).toLocaleDateString('fr-FR')}</p>
+  openMod(`<img src="${src||x.thumb}" alt="Puzzle terminé"><p>${x.n} pièces · ${fmt(x.time)} · ${new Date(x.date).toLocaleDateString('fr-FR')}</p>
   <div class="bar"><button class="p" id="rp"${src?'':' disabled'}>Rejouer cette photo</button><button id="rm">Supprimer</button><button id="cl">Fermer</button></div>`);
   $('#cl').onclick=closeMod;
   $('#rp').onclick=()=>{closeMod();openSetup(src)};
-  $('#rm').onclick=async()=>{await del('lib:'+x.id);await del('img:'+x.id);home()};
+  $('#rm').onclick=async()=>{await del('lib:'+x.id);await del('img:'+x.id);if(sb&&U)sb.from('completions').delete().eq('user_id',U.id).eq('local_id',String(x.id)).then(()=>{});home()};
 }
 
 /* Réglages avant partie */
@@ -209,7 +208,7 @@ $('#go').onclick=async()=>{
   S={n:+$('#sn').value,rot:$('#sr').checked,ghost:$('#sg').checked};put('settings',S);
   await dropOld();newGame(cur);
 };
-async function dropOld(){const o=await get('game');if(o){await del('img:'+o.id);await del('game')}}
+async function dropOld(){const o=await get('game');if(o){await del('img:'+o.id);await del('game')}cloudClear()}
 
 /* Partie */
 async function newGame(src){
@@ -243,7 +242,8 @@ const ghost=()=>{const e=$('#gho');if(e)e.style.display=G.ghost?'':'none'};
 const cnt=()=>$('#cnt').textContent=G.P.filter(p=>p.d).length+' / '+G.n;
 function save(){
   if(!G)return;const{img,g,el,...rest}=G;
-  put('game',{...rest,elapsed:G.elapsed+Date.now()-G.t0,P:G.P.map(({r,c,x,y,a,g,d})=>({r,c,x,y,a,g,d}))});
+  const st={...rest,savedAt:Date.now(),elapsed:G.elapsed+Date.now()-G.t0,P:G.P.map(({r,c,x,y,a,g,d})=>({r,c,x,y,a,g,d}))};
+  put('game',st);cloudQueue(st);
 }
 
 /* Gestion tactile et zoom fluide via RequestAnimationFrame */
@@ -357,7 +357,7 @@ function settle(mem){
 }
 async function win(){
   const x={id:G.id,n:G.n,date:Date.now(),time:G.elapsed+Date.now()-G.t0,thumb:G.thumb||await thumb(G.img)};
-  G=null;await put('lib:'+x.id,x);await del('game');pushRec(x);
+  G=null;await put('lib:'+x.id,x);await del('game');cloudClear();pushRec(x);
   openMod(`<p class="big">Bravo, puzzle terminé ! 🎉</p><img src="${x.thumb}" alt=""><p>${x.n} pièces en ${fmt(x.time)}. Il est dans ta bibliothèque.</p>
   <div class="bar"><button class="p" id="w1">Bibliothèque</button><button id="w2">Nouveau puzzle</button></div>`);
   $('#w1').onclick=home;$('#w2').onclick=()=>{closeMod();openSetup(null)};
@@ -396,6 +396,8 @@ $('#op').onclick=()=>{
 };
 $('#gb').onclick=()=>{save();home()};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(gTimer);pushGame()}else if(sb&&U&&!G)pullGame().catch(()=>{})});
+addEventListener('pagehide',()=>{clearTimeout(gTimer);pushGame()});
 
 /* Démarrage & Catalogue */
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -410,14 +412,13 @@ async function loadCat(){
   try{const r=await fetch('puzzles/puzzles.json',{cache:'no-cache'});if(r.ok){const j=await r.json();if(Array.isArray(j))L=j.map(x=>({src:'puzzles/'+encodeURI(x.file),title:x.title}))}}catch(e){}
   if(sb)try{
     const{data}=await sb.from('puzzles').select('id,title,image_path,author_id,profiles(username)').order('created_at',{ascending:false});
-    if(data)L=data.map(x=>({id:x.id,path:x.image_path,mine:!!U&&x.author_id===U.id,src:sb.storage.from('puzzles').getPublicUrl(x.image_path).data.publicUrl,title:x.title,by:x.profiles&&x.profiles.username})).concat(L);
+    if(data)L=data.map(x=>({id:x.id,path:x.image_path,src:sb.storage.from('puzzles').getPublicUrl(x.image_path).data.publicUrl,title:x.title,by:x.profiles&&x.profiles.username})).concat(L);
   }catch(e){}
   if(!L.length){$('#cat').classList.add('hide');return}
-  $('#catg').innerHTML=L.map((x,i)=>`<button class="card ct" data-i="${i}"><img loading="lazy" src="${esc(x.src)}" alt=""><span>${esc(x.title||'Puzzle')}${x.by?'<br><small>par '+esc(x.by)+'</small>':''}</span>${x.mine?'<span class="dl" role="button" aria-label="Supprimer ce puzzle">🗑</span>':''}</button>`).join('');
+  $('#catg').innerHTML=L.map((x,i)=>`<button class="card ct" data-i="${i}"><img loading="lazy" src="${esc(x.src)}" alt=""><span>${esc(x.title||'Puzzle')}${x.by?'<br><small>par '+esc(x.by)+'</small>':''}</span></button>`).join('');
   $('#cat').classList.remove('hide');
   document.querySelectorAll('.ct').forEach(b=>b.onclick=async e=>{
     const x=L[+b.dataset.i];
-    if(e.target.closest('.dl'))return delPuz(x);
     try{openSetup(await prep(x.src))}catch(e){alert('Impossible de charger ce puzzle. Vérifie que le bucket « puzzles » est public et que l’adresse du projet est correcte.')}
   });
 }
@@ -431,17 +432,69 @@ async function delPuz(x){
 /* Supabase : profil et ajout de puzzles */
 const SB_URL='https://fdetntrvgcwvwqxbcztb.supabase.co',SB_KEY='sb_publishable_qZMZtn5GRA4hngJsUwBlwA_yy8xf_gu';
 const sb=window.supabase?window.supabase.createClient(SB_URL,SB_KEY):null;
-let U=null,UN='',authNext=null,up=null;
+let U=null,UN='',authNext=null,up=null,synced=false;
 const msg=t=>{$('#am').textContent=t};
 const av=n=>`<span class="av">${esc((n||'?')[0].toUpperCase())}</span>`;
 const T=s=>Math.floor(s/60)+' min '+String(s%60).padStart(2,'0')+' s';
-const recRow=x=>({user_id:U.id,pieces:x.n,seconds:Math.round(x.time/1000),local_id:String(x.id)});
-const recOpt={onConflict:'user_id,local_id',ignoreDuplicates:true};
-async function syncLib(){const L=await all('lib:');if(L.length)await sb.from('completions').upsert(L.map(recRow),recOpt)}
+const recRow=x=>({user_id:U.id,pieces:x.n,seconds:Math.round(x.time/1000),local_id:String(x.id),thumb:x.thumb||null,played_at:x.date||null});
+const recOpt={onConflict:'user_id,local_id'};
+const lvl=n=>NS.reduce((a,b)=>Math.abs(b-n)<Math.abs(a-n)?b:a);
+const refresh=()=>{if(!G&&$('#mod').classList.contains('hide')&&!$('#home').classList.contains('hide'))home()};
+async function syncLib(){
+  const L=await all('lib:');
+  if(L.length)await sb.from('completions').upsert(L.map(recRow),recOpt);
+  const{data}=await sb.from('completions').select('local_id,pieces,seconds,thumb,played_at,created_at').eq('user_id',U.id);
+  const have=new Set(L.map(x=>String(x.id)));let add=0;
+  for(const r of data||[])if(r.local_id&&r.thumb&&!have.has(r.local_id)){await put('lib:'+r.local_id,{id:r.local_id,n:r.pieces,time:r.seconds*1000,date:r.played_at||Date.parse(r.created_at),thumb:r.thumb});add++}
+  if(add)refresh();
+}
+/* Partie en cours : copie dans le compte */
+let gTimer=0,gLast=null,gImg='';
+function cloudQueue(st){if(!sb||!U)return;gLast=st;clearTimeout(gTimer);gTimer=setTimeout(pushGame,15000)}
+async function pushGame(){
+  const st=gLast;if(!sb||!U||!st)return;gLast=null;
+  try{
+    if(gImg!==st.id){
+      const src=await get('img:'+st.id);if(!src)return;
+      const r=await sb.storage.from('games').upload(U.id+'/game.jpg',await(await fetch(src)).blob(),{upsert:true,contentType:'image/jpeg'});
+      if(r.error)throw r.error;gImg=st.id;
+    }
+    const r=await sb.from('saved_games').upsert({user_id:U.id,game:st,updated_at:new Date().toISOString()});
+    if(r.error)throw r.error;
+  }catch(e){console.warn('Synchronisation de la partie impossible',e)}
+}
+function cloudClear(){
+  if(!sb||!U)return;clearTimeout(gTimer);gLast=null;gImg='';
+  sb.from('saved_games').upsert({user_id:U.id,game:null,updated_at:new Date().toISOString()}).then(()=>{});
+  sb.storage.from('games').remove([U.id+'/game.jpg']).then(()=>{});
+}
+async function pullGame(){
+  const{data,error}=await sb.from('saved_games').select('game,updated_at').eq('user_id',U.id).maybeSingle();
+  if(error)return;
+  const loc=await get('game'),cg=data&&data.game,ct=data?Date.parse(data.updated_at):0;
+  if(cg&&(!loc||(cg.savedAt||0)>(loc.savedAt||0))){
+    const{data:b}=await sb.storage.from('games').download(U.id+'/game.jpg');if(!b)return;
+    const src=await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});
+    if(loc&&loc.id!==cg.id)await del('img:'+loc.id);
+    await put('img:'+cg.id,src);await put('game',cg);gImg=cg.id;refresh();
+  }else if(loc&&!cg&&data&&(loc.savedAt||0)<ct){
+    await del('img:'+loc.id);await del('game');refresh();
+  }else if(loc&&(!data||(loc.savedAt||0)>ct)){gLast=loc;pushGame()}
+}
+async function myPuzzles(){
+  openMod('<h2>Mes puzzles ajoutés</h2><div id="mpl"><p class="note">Chargement…</p></div><div class="bar"><button id="mb">← Retour au profil</button></div>');
+  $('#mb').onclick=()=>profView();
+  const{data,error}=await sb.from('puzzles').select('id,title,image_path').eq('author_id',U.id).order('created_at',{ascending:false});
+  const box=$('#mpl');if(!box)return;
+  if(error){box.innerHTML='<p class="note">Erreur : '+esc(error.message)+'</p>';return}
+  if(!data.length){box.innerHTML='<p class="note">Tu n’as pas encore ajouté de puzzle.</p>';return}
+  box.innerHTML=data.map((x,i)=>`<div class="mp"><img src="${esc(sb.storage.from('puzzles').getPublicUrl(x.image_path).data.publicUrl)}" alt=""><span>${esc(x.title)}</span><button data-i="${i}">Supprimer</button></div>`).join('');
+  box.querySelectorAll('button').forEach(b=>b.onclick=async()=>{const x=data[+b.dataset.i];await delPuz({id:x.id,title:x.title,path:x.image_path});myPuzzles()});
+}
 function pushRec(x){if(sb&&U)sb.from('completions').upsert(recRow(x),recOpt).then(()=>{})}
 async function prof(){
   UN='';
-  if(U){const{data}=await sb.from('profiles').select('username').eq('id',U.id).maybeSingle();UN=data?data.username:'';syncLib()}
+  if(U){const{data}=await sb.from('profiles').select('username').eq('id',U.id).maybeSingle();UN=data?data.username:'';if(!synced){synced=true;syncLib().then(pullGame).catch(e=>console.warn(e))}}else synced=false;
   $('#pf').innerHTML=U?av(UN)+esc(UN||'Mon profil'):'Se connecter';
   loadCat();
 }
@@ -484,8 +537,9 @@ function newPwView(){
 }
 async function profView(){
   openMod(`<div style="text-align:center"><span class="av big">${esc((UN||'?')[0].toUpperCase())}</span><h2>${esc(UN)}</h2></div><div id="pb"><p class="note">Chargement…</p></div>
+  <div class="bar"><button id="mp">Mes puzzles ajoutés</button></div>
   <div class="bar"><button id="lo">Se déconnecter</button><button class="p" id="ax">Fermer</button></div>`);
-  $('#ax').onclick=closeMod;$('#lo').onclick=async()=>{await sb.auth.signOut();closeMod()};
+  $('#ax').onclick=closeMod;$('#lo').onclick=async()=>{await sb.auth.signOut();closeMod()};$('#mp').onclick=myPuzzles;
   renderProf();
 }
 async function renderProf(){
@@ -497,8 +551,8 @@ async function renderProf(){
   const other=f=>f.requester===me?{id:f.addressee,n:f.ad&&f.ad.username}:{id:f.requester,n:f.rq&&f.rq.username};
   const ok=F.filter(f=>f.status==='accepted').map(f=>({fid:f.id,...other(f)}));
   const inc=F.filter(f=>f.status==='pending'&&f.addressee===me),out=F.filter(f=>f.status==='pending'&&f.requester===me);
-  const best={};C.forEach(r=>{const b=best[r.user_id]=best[r.user_id]||{};b[r.pieces]=Math.min(b[r.pieces]??1e9,r.seconds)});
-  const cols=[{id:me,n:'Moi'},...ok],ps=[...new Set(C.map(r=>r.pieces))].sort((a,b)=>a-b);
+  const best={};C.forEach(r=>{const b=best[r.user_id]=best[r.user_id]||{};const k=lvl(r.pieces);b[k]=Math.min(b[k]??1e9,r.seconds)});
+  const cols=[{id:me,n:'Moi'},...ok],ps=[...new Set(C.map(r=>lvl(r.pieces)))].sort((a,b)=>a-b);
   const tbl=ps.length?`<div style="overflow-x:auto"><table class="rec"><tr><th>Pièces</th>${cols.map(c=>`<th>${esc(c.n||'?')}</th>`).join('')}</tr>${ps.map(p=>{
     const v=cols.map(c=>(best[c.id]||{})[p]),m=Math.min(...v.filter(x=>x!=null));
     return `<tr><td>${p}</td>${v.map(x=>`<td>${x==null?'–':x===m?'<b>'+T(x)+'</b>':T(x)}</td>`).join('')}</tr>`}).join('')}</table></div>`
