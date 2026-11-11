@@ -18,12 +18,13 @@
 <style>
 @font-face{font-family:"Philosykos";src:url(fonts/Philosykos.woff2) format("woff2"),url(fonts/Philosykos.otf) format("opentype");font-display:swap}
 :root{box-sizing:border-box;color-scheme:light;--bg:#f5ede1;--card:#fbf7f0;--bd:#dccdb7;--fg:#2b1216;--mut:#6f5558;--ac:#7b1e32;--ac2:#a02a44;--warm:#7b1e32;--felt:#ece1d0}
+html{background:#f5ede1}
 html, body {
   scroll-padding-top:env(safe-area-inset-top,0px);
   margin:0;
   padding:0;
   width:100%;
-  height:100%;
+  height:var(--H,100%);
   overflow:hidden;
   position:fixed;
   touch-action:none;
@@ -55,7 +56,7 @@ button:focus-visible,select:focus-visible,.file:focus-within,input:focus-visible
 .res{display:flex;align-items:center;gap:12px;max-width:420px;margin:14px 0;border-color:var(--ac)}
 .res img{width:96px;height:72px;flex:none}.res span{color:var(--fg)}
 .stage{flex:1;min-height:0;background:var(--felt);border:1px solid var(--bd);border-radius:14px;overflow:hidden;touch-action:none}
-#game{position:fixed;top:0;left:0;right:0;bottom:0;height:100dvh;z-index:5;background:var(--bg);display:flex;flex-direction:column;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) 10px calc(8px + env(safe-area-inset-bottom,0px));touch-action:none}
+#game{position:fixed;top:0;left:0;right:0;bottom:0;height:var(--H,100dvh);z-index:5;background:var(--bg);display:flex;flex-direction:column;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) 10px calc(8px + env(safe-area-inset-bottom,0px));touch-action:none}
 #game .bar{margin:0}
 body.play{overflow:hidden;overscroll-behavior:none;touch-action:none}
 .zm{display:inline-flex;gap:6px;align-items:center}
@@ -63,7 +64,7 @@ body.play{overflow:hidden;overscroll-behavior:none;touch-action:none}
 .pc{cursor:grab;will-change:transform}.pc.done{cursor:default}
 .pc.dragging{filter:drop-shadow(0 3px 5px rgba(0,0,0,.45))}
 .pv{display:block;max-width:100%;max-height:260px;border-radius:12px;margin:12px 0;border:1px solid var(--bd)}
-.ov{position:fixed;inset:0;z-index:20;background:rgba(43,18,22,.55);display:flex;align-items:center;justify-content:center;height:100dvh;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.ov{position:fixed;inset:0;z-index:20;background:rgba(43,18,22,.55);display:flex;align-items:center;justify-content:center;height:var(--H,100dvh);padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
 .box{background:var(--bg);border:1px solid var(--bd);border-radius:16px;padding:20px;width:100%;max-width:460px;max-height:100%;overflow:auto}
 .box img{width:100%;max-height:42dvh;object-fit:contain;border-radius:10px;margin-bottom:10px}
 .big{font-size:28px;font-weight:800;color:var(--warm)}
@@ -126,6 +127,14 @@ h3{margin:18px 0 6px}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
+// Hauteur réelle de l'écran (corrige la bande en bas sur iPhone en mode application)
+function fitH(){try{
+  const st=navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
+  let h=innerHeight;
+  if(st){const l=matchMedia('(orientation: landscape)').matches;h=Math.max(h,l?Math.min(screen.width,screen.height):Math.max(screen.width,screen.height))}
+  document.documentElement.style.setProperty('--H',h+'px');
+}catch(e){}}
+fitH();addEventListener('resize',fitH);addEventListener('orientationchange',()=>setTimeout(fitH,300));
 // Affiche les erreurs à l'écran (aide au dépannage)
 function dbg(m){let b=document.getElementById('dbg');if(!b){b=document.createElement('div');b.id='dbg';b.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#7b1e32;color:#fff;padding:10px;border-radius:10px;font:13px/1.4 sans-serif;white-space:pre-wrap;user-select:text';b.onclick=()=>b.remove();(document.body||document.documentElement).appendChild(b)}b.textContent+=(b.textContent?'\n':'')+m}
 addEventListener('error',e=>dbg('Erreur : '+e.message));
