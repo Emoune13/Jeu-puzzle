@@ -12,9 +12,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<link rel="manifest" href="manifest.json?v=2">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=2">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png?v=2">
+<link rel="manifest" href="manifest.json?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/jtjt-180.png?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/jtjt-32.png?v=3">
 <style>
 :root{
   box-sizing:border-box;color-scheme:light dark;
@@ -37,7 +37,7 @@
 html{background:var(--bg)}
 html,body{
   scroll-padding-top:env(safe-area-inset-top,0px);
-  margin:0;padding:0;width:100%;height:var(--H,100%);overflow:hidden;position:fixed;
+  margin:0;padding:0;width:100%;height:100%;overflow:hidden;position:fixed;
   touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;
   -webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;
 }
@@ -79,7 +79,8 @@ button:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 button:focus-visible,select:focus-visible,.file:focus-within,input:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 .back{background:none;padding:0 6px 0 0;min-height:40px;font-weight:500;font-size:17px;color:var(--ac);justify-content:flex-start}
 .back b{font-size:30px;font-weight:400;line-height:1;margin-top:-3px}
-#pf{display:block;max-width:48%;min-height:38px;padding:0 14px;border-radius:999px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:38px}
+#pf{display:inline-flex;align-items:center;max-width:52%;height:38px;min-height:38px;padding:0 14px;border-radius:999px;font-size:15px;white-space:nowrap}
+#pf .av{flex:none;margin:0 8px 0 -8px}#pf .pn{min-width:0;overflow:hidden;text-overflow:ellipsis}
 #pf.hide{display:none}
 .acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:20px 0 6px}
 .acts button{min-height:50px}
@@ -114,8 +115,10 @@ input:not([type=checkbox]):not([type=file]){
   font:inherit;font-size:17px;color:var(--fg);background:var(--fill);border:0;border-radius:12px;padding:10px 14px;width:58%;
   user-select:text;-webkit-user-select:text;touch-action:auto;
 }
-.list .row input:not([type=checkbox]){background:transparent;border-radius:0;padding:6px 0;text-align:right}
+.list .row input:not([type=checkbox]){background:transparent;border-radius:0;padding:6px 0;text-align:left;flex:1;width:auto;min-width:0}
+.lb{flex:none;width:112px}
 .list .row input.l{text-align:left;width:auto;flex:1;min-width:0}
+.list .row input:focus-visible{outline:none}
 input::placeholder{color:var(--mut);opacity:.7}
 
 /* Grilles & cartes */
@@ -145,8 +148,8 @@ input::placeholder{color:var(--mut);opacity:.7}
 /* Partie */
 .stage{flex:1;min-height:0;background:var(--felt);border-radius:24px;overflow:hidden;touch-action:none;box-shadow:inset 0 0 0 .5px var(--bd)}
 #game{
-  position:fixed;top:0;left:0;right:0;bottom:0;height:var(--H,100dvh);z-index:5;background:var(--bg);
-  display:flex;flex-direction:column;gap:10px;padding:calc(6px + env(safe-area-inset-top,0px)) 14px calc(10px + env(safe-area-inset-bottom,0px));touch-action:none;
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:5;background:var(--bg);
+  display:flex;flex-direction:column;gap:12px;padding:calc(6px + env(safe-area-inset-top,0px)) 14px calc(18px + env(safe-area-inset-bottom,0px));touch-action:none;
 }
 .gbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
 .gbar #gb{justify-self:start}.gbar #op{justify-self:end;padding:0 4px;background:none;min-height:40px;font-weight:500;font-size:17px}
@@ -164,10 +167,10 @@ body.play{overflow:hidden;overscroll-behavior:none;touch-action:none}
 /* Fenêtres (feuilles iOS) */
 .ov{
   position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.38);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-  display:flex;align-items:flex-end;justify-content:center;height:var(--H,100dvh);padding:calc(10px + env(safe-area-inset-top,0px)) 0 0;animation:bg .25s ease both;
+  display:flex;align-items:flex-end;justify-content:center;padding:calc(10px + env(safe-area-inset-top,0px)) 10px calc(28px + env(safe-area-inset-bottom,0px));animation:bg .25s ease both;
 }
 .box{
-  --cell:var(--cell-s);background:var(--sheet);border-radius:28px 28px 0 0;padding:10px 20px calc(22px + env(safe-area-inset-bottom,0px));
+  --cell:var(--cell-s);background:var(--sheet);border-radius:30px;padding:10px 20px 22px;
   width:100%;max-width:540px;max-height:100%;overflow:auto;-webkit-overflow-scrolling:touch;animation:up .38s cubic-bezier(.2,.9,.25,1) both;
   box-shadow:0 -10px 50px rgba(0,0,0,.25);
 }
@@ -193,7 +196,7 @@ body.play{overflow:hidden;overscroll-behavior:none;touch-action:none}
 .mi .ico{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--grad);font-size:17px}
 .mi .ch{margin-left:auto;color:var(--mut);font-size:22px;opacity:.6}
 .bdg{min-width:22px;height:22px;border-radius:11px;background:var(--red);color:#fff;font-size:13px;font-weight:700;display:inline-grid;place-items:center;padding:0 7px;margin-left:auto}
-.bdg+.ch{margin-left:6px}
+.bdg:not(.hide)+.ch{margin-left:8px}
 #lemp{text-align:center;padding:26px 16px;background:var(--card);border-radius:20px;box-shadow:var(--shadow);margin-top:12px}
 .fx{min-height:32px;min-width:32px;padding:0;border-radius:50%;font-size:14px}
 @media (hover:hover){.card:hover{transform:translateY(-2px)}button.p:hover{filter:brightness(1.06)}}
@@ -247,12 +250,7 @@ body.play{overflow:hidden;overscroll-behavior:none;touch-action:none}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 // Hauteur réelle de l'écran (corrige la bande en bas sur iPhone en mode application)
-function fitH(){try{
-  const st=navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
-  let h=innerHeight;
-  if(st){const l=matchMedia('(orientation: landscape)').matches;h=Math.max(h,l?Math.min(screen.width,screen.height):Math.max(screen.width,screen.height))}
-  document.documentElement.style.setProperty('--H',h+'px');
-}catch(e){}}
+function fitH(){}
 fitH();addEventListener('resize',fitH);addEventListener('orientationchange',()=>setTimeout(fitH,300));
 // Affiche les erreurs à l'écran (aide au dépannage)
 function dbg(m){let b=document.getElementById('dbg');if(!b){b=document.createElement('div');b.id='dbg';b.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#3a0f4a;color:#fff;padding:10px;border-radius:10px;font:13px/1.4 sans-serif;white-space:pre-wrap;user-select:text';b.onclick=()=>b.remove();(document.body||document.documentElement).appendChild(b)}b.textContent+=(b.textContent?'\n':'')+m}
@@ -302,7 +300,7 @@ function dims(n,ar){const cols=Math.max(2,Math.round(Math.sqrt(n*ar)));return[co
 let S={n:48,rot:false,ghost:true},cur=null,G=null,drag=null,pan=null,Z=1;
 const show=id=>{['home','setup','game','allp'].forEach(x=>$('#'+x).classList.toggle('hide',x!=id));document.body.classList.toggle('play',id=='game')};
 const closeMod=()=>$('#mod').classList.add('hide');
-const openMod=h=>{$('#mod').innerHTML='<div class="box">'+h+'</div>';$('#mod').classList.remove('hide')};
+const openMod=h=>{delete $('#mod').dataset.close;$('#mod').innerHTML='<div class="box">'+h+'</div>';$('#mod').classList.remove('hide')};
 const optHTML=(p,v)=>`<div class="list"><label class="row">Nombre de pièces<select id="${p}n">${NS.map(x=>`<option${x==v.n?' selected':''}>${x}</option>`).join('')}</select></label>
 <label class="row">Pièces à faire tourner (90° au toucher)<input type="checkbox" id="${p}r"${v.rot?' checked':''}></label>
 <label class="row">Aperçu en filigrane<input type="checkbox" id="${p}g"${v.ghost?' checked':''}></label></div>`;
@@ -318,9 +316,10 @@ async function home(){
 async function libView(x){
   const src=await get('img:'+x.id);
   openMod(`<img src="${src||x.thumb}" alt="Puzzle terminé"><p>${x.n} pièces · ${fmt(x.time)} · ${new Date(x.date).toLocaleDateString('fr-FR')}</p>
-  <div class="bar"><button class="p" id="rp"${src?'':' disabled'}>Rejouer cette photo</button><button class="dg" id="rm">Supprimer</button><button id="cl">Fermer</button></div>`);
+  ${src?'':'<p class="note">La photo d’origine n’est plus enregistrée sur cet appareil : l’aperçu (qualité réduite) sera utilisé.</p>'}
+  <div class="bar"><button class="p" id="rp"${src||x.thumb?'':' disabled'}>Rejouer cette photo</button><button class="dg" id="rm">Supprimer</button><button id="cl">Fermer</button></div>`);
   $('#cl').onclick=closeMod;
-  $('#rp').onclick=()=>{closeMod();openSetup(src)};
+  $('#rp').onclick=()=>{closeMod();openSetup(src||x.thumb)};
   $('#rm').onclick=async()=>{await del('lib:'+x.id);await del('img:'+x.id);if(sb&&U)sb.from('completions').delete().eq('user_id',U.id).eq('local_id',String(x.id)).then(()=>{});LIB=LIB.filter(y=>y.id!=x.id);if(CUR==='lib'){closeMod();openAll('lib')}else home()};
 }
 
@@ -497,7 +496,7 @@ async function win(){
   G=null;await put('lib:'+x.id,x);await del('game');cloudClear();pushRec(x);
   openMod(`<p class="big">Bravo, puzzle terminé ! 🎉</p><img src="${x.thumb}" alt=""><p>${x.n} pièces en ${fmt(x.time)}. Il est dans ta bibliothèque.</p>
   <div class="bar"><button class="p" id="w1">Bibliothèque</button><button id="w2">Nouveau puzzle</button></div>`);
-  $('#w1').onclick=home;$('#w2').onclick=()=>{closeMod();openSetup(null)};
+  $('#mod').dataset.close='home';$('#w1').onclick=home;$('#w2').onclick=()=>{closeMod();openSetup(null)};
 }
 
 /* Disperser */
@@ -516,8 +515,7 @@ $('#ds').onclick=()=>{
 /* Options en cours de partie */
 $('#op').onclick=()=>{
   openMod(`<h2>Options</h2>${optHTML('m',{n:G.n,rot:G.rot,ghost:G.ghost})}
-  <div class="bar"><button id="mre">Recommencer avec ce nombre</button><button class="dg" id="mab">Abandonner</button><button class="p" id="mx">Fermer</button></div>
-  <p class="note">Changer le nombre de pièces relance le puzzle avec la même photo.</p><p class="note">Zoom : pince avec deux doigts, molette ou boutons +/−. Fais glisser le fond pour te déplacer.</p>`);
+  <div class="bar"><button id="mre">Recommencer avec ce nombre</button><button class="dg" id="mab">Abandonner</button><button class="p" id="mx">Fermer</button></div>`);
   $('#mx').onclick=closeMod;
   $('#mg').onchange=e=>{G.ghost=S.ghost=e.target.checked;ghost();put('settings',S);save()};
   $('#mr').onchange=e=>{
@@ -656,15 +654,15 @@ function pushRec(x){if(sb&&U)sb.from('completions').upsert(recRow(x),recOpt).the
 async function prof(){
   UN='';
   if(U){const{data}=await sb.from('profiles').select('username').eq('id',U.id).maybeSingle();UN=data?data.username:'';if(!synced){synced=true;syncLib().then(pullGame).catch(e=>console.warn(e))}}else synced=false;
-  $('#pf').innerHTML=U?av(UN)+esc(UN||'Mon profil'):'Se connecter';
+  $('#pf').innerHTML=U?av(UN)+'<span class="pn">'+esc(UN||'Mon profil')+'</span>':'Se connecter';
   loadCat();
 }
 function authView(mode,note){
   const su=mode==='signup',fg=mode==='forgot';
   openMod(`<h2>${fg?'Mot de passe oublié':su?'Créer un compte':'Se connecter'}</h2>${note?`<p class="note">${note}</p>`:''}
-  <div class="list">${fg?'':`<label class="row">Pseudo<input id="au" maxlength="24" autocomplete="username"></label>`}
-  ${su||fg?`<label class="row">E-mail<input id="ae" type="email" autocomplete="email"></label>`:''}
-  ${fg?'':`<label class="row">Mot de passe<input id="ap" type="password" autocomplete="${su?'new-password':'current-password'}"></label>`}</div>
+  <div class="list">${fg?'':`<label class="row"><span class="lb">Pseudo</span><input id="au" maxlength="24" autocomplete="username"></label>`}
+  ${su||fg?`<label class="row"><span class="lb">E-mail</span><input id="ae" type="email" autocomplete="email"></label>`:''}
+  ${fg?'':`<label class="row"><span class="lb">Mot de passe</span><input id="ap" type="password" autocomplete="${su?'new-password':'current-password'}"></label>`}</div>
   <p id="am" class="note" role="status"></p>
   <div class="bar"><button class="p" id="authgo">${fg?'Envoyer le lien':su?'Créer mon compte':'Se connecter'}</button><button id="ax">Fermer</button></div>
   <div class="bar">${mode==='login'?'<button id="m1">Créer un compte</button><button id="m2">Mot de passe oublié</button>':'<button id="m1">Retour à la connexion</button>'}</div>`);
@@ -693,7 +691,7 @@ function authView(mode,note){
   }catch(e){msg('Erreur : '+e.message)}};
 }
 function newPwView(){
-  openMod(`<h2>Nouveau mot de passe</h2><div class="list"><label class="row">Mot de passe<input id="np" type="password" autocomplete="new-password"></label></div><p id="am" class="note" role="status"></p><div class="bar"><button class="p" id="authgo">Enregistrer</button></div>`);
+  openMod(`<h2>Nouveau mot de passe</h2><div class="list"><label class="row"><span class="lb">Mot de passe</span><input id="np" type="password" autocomplete="new-password"></label></div><p id="am" class="note" role="status"></p><div class="bar"><button class="p" id="authgo">Enregistrer</button></div>`);
   $('#authgo').onclick=async()=>{const{error}=await sb.auth.updateUser({password:$('#np').value});if(error)return msg('Échec : '+error.message);closeMod();alert('Mot de passe modifié.')};
 }
 async function profView(){
@@ -767,7 +765,7 @@ function addView(){
   openMod(`<h2>Ajouter un puzzle</h2><p class="note">Il sera visible par tous dans « Puzzles proposés ».</p>
   <label class="file p">Choisir une photo<input id="uf" type="file" accept="image/*" hidden></label>
   <img id="upv" class="pv hide" alt="Photo choisie">
-  <div class="list"><label class="row">Titre<input id="ut" maxlength="80"></label></div><p id="am" class="note"></p>
+  <div class="list"><label class="row"><span class="lb">Titre</span><input id="ut" maxlength="80"></label></div><p id="am" class="note"></p>
   <div class="bar"><button class="p" id="ub" disabled>Publier</button><button id="ux">Annuler</button></div>`);
   $('#ux').onclick=closeMod;
   $('#uf').onchange=e=>{
@@ -792,6 +790,10 @@ if(sb){
   $('#addp').onclick=addView;
 }else{dbg('Librairie Supabase non chargée (connexion internet ou bloqueur de publicités ?). Profil et ajout de puzzles désactivés.');$('#pf').classList.add('hide');$('#addp').classList.add('hide')}
 
+let _md=null;
+$('#mod').addEventListener('pointerdown',e=>{_md=e.target});
+$('#mod').addEventListener('click',e=>{if(e.target===e.currentTarget&&_md===e.currentTarget){if($('#mod').dataset.close==='home')home();else closeMod()}});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#mod').classList.contains('hide'))closeMod()});
 get('settings').then(s=>{if(s)S={...S,...s};home();loadCat()});
 </script>
 </body>
