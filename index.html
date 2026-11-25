@@ -4,106 +4,223 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="color-scheme" content="light dark">
 <title>JTJTJTJT</title>
 <meta name="application-name" content="JTJTJTJT">
 <meta name="apple-mobile-web-app-title" content="JTJTJTJT">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#c0a882">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.json?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png?v=2">
 <style>
-@font-face{font-family:"Philosykos";src:url(fonts/Philosykos.woff2) format("woff2"),url(fonts/Philosykos.otf) format("opentype");font-display:swap}
-:root{box-sizing:border-box;color-scheme:light;--bg:#f5ede1;--card:#fbf7f0;--bd:#dccdb7;--fg:#2b1216;--mut:#6f5558;--ac:#7b1e32;--ac2:#a02a44;--warm:#7b1e32;--felt:#ece1d0}
-html{background:#f5ede1}
-html, body {
+:root{
+  box-sizing:border-box;color-scheme:light dark;
+  --bg:#f2f2f7;--card:#fff;--sheet:#f2f2f7;--cell:#fff;--cell-s:#fff;
+  --bd:rgba(60,60,67,.16);--fg:#1c1c1e;--mut:#6c6c70;
+  --ac:#8e3bd8;--tint:rgba(142,59,216,.11);--grad:linear-gradient(135deg,#9244ec 0%,#c8329a 100%);
+  --felt:#e5e5ea;--glass:rgba(255,255,255,.72);--fill:rgba(120,120,128,.14);
+  --red:#e5262b;--redt:rgba(229,38,43,.10);--glow:rgba(175,82,222,.22);
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 10px 28px rgba(60,30,110,.09);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",system-ui,Roboto,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#000;--card:#1c1c1e;--sheet:#1c1c1e;--cell:#1c1c1e;--cell-s:#2c2c2e;
+  --bd:rgba(235,235,245,.16);--fg:#f5f5f7;--mut:#98989f;
+  --ac:#c58cff;--tint:rgba(197,140,255,.16);
+  --felt:#151517;--glass:rgba(44,44,46,.72);--fill:rgba(120,120,128,.26);
+  --red:#ff6961;--redt:rgba(255,105,97,.14);--glow:rgba(175,82,222,.34);
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 28px rgba(0,0,0,.5);
+}}
+html{background:var(--bg)}
+html,body{
   scroll-padding-top:env(safe-area-inset-top,0px);
-  margin:0;
-  padding:0;
-  width:100%;
-  height:var(--H,100%);
-  overflow:hidden;
-  position:fixed;
-  touch-action:none;
-  -webkit-touch-callout:none;
-  -webkit-user-select:none;
-  user-select:none;
+  margin:0;padding:0;width:100%;height:var(--H,100%);overflow:hidden;position:fixed;
+  touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;
+  -webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font:16px/1.5 "Bricolage Grotesque",system-ui,sans-serif}
-main{padding:calc(18px + env(safe-area-inset-top,0px)) max(14px,calc((100% - 960px)/2)) calc(40px + env(safe-area-inset-bottom,0px));height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
-h1{font-family:"Philosykos","Bodoni Moda","Didot",serif;text-align:center;text-transform:uppercase;font-weight:400;font-size:clamp(34px,9vw,64px);line-height:1.05;margin:8px 0 6px;letter-spacing:.06em}
-.sub{text-align:center}#home>.bar{justify-content:center}
-h2{margin:0 0 12px;font-size:24px}
-.sub,.note{color:var(--mut)}.note{font-size:14px}
-button,select,.file{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:9px 14px;cursor:pointer;touch-action:manipulation}
-button:hover,.file:hover{border-color:var(--ac2)}
-button.p,.file.p{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600}
-button.p:hover,.file.p:hover{background:#5f1626}
-button:disabled{opacity:.45;cursor:not-allowed}
-button:focus-visible,select:focus-visible,.file:focus-within,input:focus-visible{outline:3px solid var(--ac2);outline-offset:2px}
-.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
-.bar .sp{flex:1}
-.row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)}
-.row input[type=checkbox]{width:22px;height:22px;accent-color:var(--ac)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
-.card{padding:0;overflow:hidden;text-align:left;display:block;width:100%}
-.card img{display:block;width:100%;height:110px;object-fit:cover;background:#eee}
-.card span{display:block;padding:8px 10px;font-size:14px;color:var(--mut)}
-.res{display:flex;align-items:center;gap:12px;max-width:420px;margin:14px 0;border-color:var(--ac)}
-.res img{width:96px;height:72px;flex:none}.res span{color:var(--fg)}
-.stage{flex:1;min-height:0;background:var(--felt);border:1px solid var(--bd);border-radius:14px;overflow:hidden;touch-action:none}
-#game{position:fixed;top:0;left:0;right:0;bottom:0;height:var(--H,100dvh);z-index:5;background:var(--bg);display:flex;flex-direction:column;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) 10px calc(8px + env(safe-area-inset-bottom,0px));touch-action:none}
-#game .bar{margin:0}
+body{
+  background:var(--bg) radial-gradient(90% 42% at 50% -4%,var(--glow),transparent 72%) no-repeat;
+  color:var(--fg);font:17px/1.4 var(--font);letter-spacing:-.011em;-webkit-font-smoothing:antialiased;
+}
+main{
+  padding:calc(14px + env(safe-area-inset-top,0px)) max(18px,calc((100% - 820px)/2)) calc(48px + env(safe-area-inset-bottom,0px));
+  height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+section:not(.hide):not(#game){animation:fade .3s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes bg{from{opacity:0}to{opacity:1}}
+
+/* Titres */
+h1{font-size:clamp(32px,9vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin:0}
+h2{margin:0 0 12px;font-size:22px;font-weight:700;letter-spacing:-.02em}
+#allp h2,#setup h2{font-size:32px;font-weight:800;letter-spacing:-.03em;margin:8px 0 14px}
+h3{margin:22px 0 8px 16px;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.sub,.note{color:var(--mut)}
+.sub{margin:6px 0 0;font-size:16px}
+.note{font-size:14px;line-height:1.35}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 0}
+.top h1{min-width:0}
+
+/* Boutons */
+button,.file{
+  font:inherit;font-size:16px;font-weight:600;letter-spacing:-.011em;color:var(--ac);background:var(--tint);
+  border:0;border-radius:14px;padding:0 18px;min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;touch-action:manipulation;transition:transform .15s ease,opacity .15s ease,background .2s ease;
+}
+button:active,.file:active{transform:scale(.97);opacity:.82}
+button.p,.file.p{background:var(--grad);color:#fff;box-shadow:0 6px 18px rgba(170,50,190,.32)}
+button.dg{color:var(--red);background:var(--redt)}
+button:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+button:focus-visible,select:focus-visible,.file:focus-within,input:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.back{background:none;padding:0 6px 0 0;min-height:40px;font-weight:500;font-size:17px;color:var(--ac);justify-content:flex-start}
+.back b{font-size:30px;font-weight:400;line-height:1;margin-top:-3px}
+#pf{display:block;max-width:48%;min-height:38px;padding:0 14px;border-radius:999px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:38px}
+#pf.hide{display:none}
+.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:20px 0 6px}
+.acts button{min-height:50px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+#setup .bar .p{flex:1}
+.box .bar{flex-direction:column;align-items:stretch}
+.box .bar button{width:100%}
+.file{display:flex;width:100%}
+
+/* Listes réglages (style iOS) */
+.list{background:var(--cell);border-radius:16px;padding:0 16px;margin:12px 0;overflow:hidden}
+.row{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:.5px solid var(--bd);min-height:50px}
+.list .row:last-child{border-bottom:0}
+.box>.row,#pb>.row{padding:12px 4px}
+select{
+  font:inherit;font-size:17px;color:var(--ac);background:transparent;border:0;padding:6px 20px 6px 8px;cursor:pointer;
+  -webkit-appearance:none;appearance:none;text-align:right;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16' fill='none' stroke='%23999' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 6l3-3 3 3M2 10l3 3 3-3'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right center;
+}
+input[type=checkbox]{
+  -webkit-appearance:none;appearance:none;flex:none;width:51px;height:31px;border-radius:16px;background:rgba(120,120,128,.32);
+  position:relative;cursor:pointer;transition:background .25s ease;margin:0;
+}
+input[type=checkbox]::after{
+  content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;
+  box-shadow:0 2px 5px rgba(0,0,0,.28);transition:transform .25s cubic-bezier(.3,.9,.4,1);
+}
+input[type=checkbox]:checked{background:var(--grad)}
+input[type=checkbox]:checked::after{transform:translateX(20px)}
+input:not([type=checkbox]):not([type=file]){
+  font:inherit;font-size:17px;color:var(--fg);background:var(--fill);border:0;border-radius:12px;padding:10px 14px;width:58%;
+  user-select:text;-webkit-user-select:text;touch-action:auto;
+}
+.list .row input:not([type=checkbox]){background:transparent;border-radius:0;padding:6px 0;text-align:right}
+.list .row input.l{text-align:left;width:auto;flex:1;min-width:0}
+input::placeholder{color:var(--mut);opacity:.7}
+
+/* Grilles & cartes */
+.sec{margin:28px 0 4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:12px}
+.card{
+  padding:0;overflow:hidden;text-align:left;display:block;width:100%;min-height:0;
+  background:var(--card);color:var(--fg);font-weight:400;border-radius:20px;box-shadow:var(--shadow);
+}
+.card img{display:block;width:100%;aspect-ratio:4/3;height:auto;object-fit:cover;background:var(--fill)}
+.card span{display:block;padding:10px 14px 13px;font-size:14px;line-height:1.3;color:var(--mut)}
+.ct span{color:var(--fg);font-weight:600;font-size:15px}
+.card small{color:var(--ac);font-weight:500;font-size:13px}
+.res{display:flex;align-items:center;gap:14px;max-width:560px;margin:14px 0 0;padding:12px 16px 12px 12px}
+.res img{width:84px;height:84px;aspect-ratio:1;border-radius:14px;flex:none}
+.res span{padding:0;color:var(--mut)}
+.res .rt{flex:1;min-width:0}
+.res .rt b{display:block;color:var(--fg);font-size:17px;font-weight:700}
+.res .ch{flex:none;color:var(--mut);font-size:26px;opacity:.6}
+.pg{display:block;height:6px;border-radius:3px;background:var(--fill);margin-top:9px;overflow:hidden}
+.pg i{display:block;height:100%;border-radius:3px;background:var(--grad)}
+#home .hb,#allp .hb{all:unset;cursor:pointer;display:inline-flex;gap:6px;align-items:center;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.hb:focus-visible{outline:3px solid var(--ac);outline-offset:3px;border-radius:6px}
+.hb span{color:var(--ac);font-size:26px;font-weight:500;margin-top:-2px}
+.pv{display:block;max-width:100%;max-height:280px;border-radius:20px;margin:16px 0;box-shadow:var(--shadow)}
+
+/* Partie */
+.stage{flex:1;min-height:0;background:var(--felt);border-radius:24px;overflow:hidden;touch-action:none;box-shadow:inset 0 0 0 .5px var(--bd)}
+#game{
+  position:fixed;top:0;left:0;right:0;bottom:0;height:var(--H,100dvh);z-index:5;background:var(--bg);
+  display:flex;flex-direction:column;gap:10px;padding:calc(6px + env(safe-area-inset-top,0px)) 14px calc(10px + env(safe-area-inset-bottom,0px));touch-action:none;
+}
+.gbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+.gbar #gb{justify-self:start}.gbar #op{justify-self:end;padding:0 4px;background:none;min-height:40px;font-weight:500;font-size:17px}
+#cnt{font-variant-numeric:tabular-nums;font-size:16px;font-weight:700;background:var(--card);box-shadow:var(--shadow);padding:7px 16px;border-radius:999px}
+.dock{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;align-self:center;padding:7px;border-radius:24px;background:var(--glass);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:var(--shadow)}
+.dock #ds{min-height:42px}
+.zm{display:inline-flex;align-items:center;background:var(--fill);border-radius:14px;overflow:hidden}
+.zm button{background:none;border-radius:0;min-width:46px;min-height:42px;padding:0;font-size:24px;font-weight:400;color:var(--fg)}
+#zl{min-width:54px;text-align:center;font-size:14px;font-weight:600;color:var(--mut);font-variant-numeric:tabular-nums}
 body.play{overflow:hidden;overscroll-behavior:none;touch-action:none}
-.zm{display:inline-flex;gap:6px;align-items:center}
 .stage svg{display:block;width:100%;height:100%;touch-action:none;user-select:none;-webkit-user-select:none;will-change:transform}
 .pc{cursor:grab;will-change:transform}.pc.done{cursor:default}
-.pc.dragging{filter:drop-shadow(0 3px 5px rgba(0,0,0,.45))}
-.pv{display:block;max-width:100%;max-height:260px;border-radius:12px;margin:12px 0;border:1px solid var(--bd)}
-.ov{position:fixed;inset:0;z-index:20;background:rgba(43,18,22,.55);display:flex;align-items:center;justify-content:center;height:var(--H,100dvh);padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
-.box{background:var(--bg);border:1px solid var(--bd);border-radius:16px;padding:20px;width:100%;max-width:460px;max-height:100%;overflow:auto}
-.box img{width:100%;max-height:42dvh;object-fit:contain;border-radius:10px;margin-bottom:10px}
-.big{font-size:28px;font-weight:800;color:var(--warm)}
+.pc.dragging{filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))}
+
+/* Fenêtres (feuilles iOS) */
+.ov{
+  position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.38);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  display:flex;align-items:flex-end;justify-content:center;height:var(--H,100dvh);padding:calc(10px + env(safe-area-inset-top,0px)) 0 0;animation:bg .25s ease both;
+}
+.box{
+  --cell:var(--cell-s);background:var(--sheet);border-radius:28px 28px 0 0;padding:10px 20px calc(22px + env(safe-area-inset-bottom,0px));
+  width:100%;max-width:540px;max-height:100%;overflow:auto;-webkit-overflow-scrolling:touch;animation:up .38s cubic-bezier(.2,.9,.25,1) both;
+  box-shadow:0 -10px 50px rgba(0,0,0,.25);
+}
+.box::before{content:"";display:block;width:38px;height:5px;border-radius:3px;background:var(--bd);margin:0 auto 16px}
+@media (min-width:600px){.ov{align-items:center;padding:24px}.box{border-radius:28px;max-height:92%}}
+.box img{width:100%;max-height:42dvh;object-fit:contain;border-radius:16px;margin-bottom:12px}
+.box h2{font-size:24px;font-weight:800;letter-spacing:-.025em}
+.big{font-size:28px;font-weight:800;letter-spacing:-.025em;line-height:1.15}
+.box .big{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .hide{display:none!important}
-input:not([type=checkbox]):not([type=file]){font:inherit;color:var(--fg);background:#fff;border:1px solid var(--bd);border-radius:10px;padding:9px 12px;width:58%;user-select:text;-webkit-user-select:text;touch-action:auto}
-.card small{color:var(--ac)}
-.av{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:13px;margin-right:6px;vertical-align:middle}
-.av.big{width:56px;height:56px;font-size:26px;margin:0}
-.mp{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)}.mp img{width:64px;height:64px;object-fit:cover;border-radius:8px}.mp span{flex:1;text-align:left}
-.rec{border-collapse:collapse;width:100%;font-size:14px}.rec th,.rec td{padding:6px 10px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap}
-#home .hb,#allp .hb{all:unset;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
-.hb:focus-visible{outline:3px solid var(--ac2);outline-offset:3px;border-radius:6px}.hb span{color:var(--ac)}
-.menu{display:flex;flex-direction:column;gap:8px;margin:14px 0}
-.mi{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:14px}.mi .ch{margin-left:auto;color:var(--ac)}
-.bdg{min-width:20px;height:20px;border-radius:10px;background:var(--ac);color:#fff;font-size:12px;font-weight:700;display:inline-grid;place-items:center;padding:0 6px}
-h3{margin:18px 0 6px}
+.av{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--grad);color:#fff;font-weight:700;font-size:13px;margin-right:8px;vertical-align:middle;line-height:1}
+.av.big{width:72px;height:72px;font-size:32px;margin:0 0 6px;-webkit-text-fill-color:#fff;background:var(--grad)}
+.mp{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:.5px solid var(--bd)}
+.mp img{width:64px;height:64px;object-fit:cover;border-radius:12px;margin:0}
+.mp span{flex:1;text-align:left;font-weight:500}
+.mp button{min-height:36px;padding:0 14px;font-size:14px}
+.rec{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+.rec th,.rec td{padding:10px 12px;border-bottom:.5px solid var(--bd);text-align:left;white-space:nowrap}
+.rec th{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.menu{display:flex;flex-direction:column;margin:14px 0;background:var(--cell);border-radius:16px;overflow:hidden}
+.mi{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:0 16px;min-height:54px;background:none;border-radius:0;color:var(--fg);font-weight:500;border-bottom:.5px solid var(--bd);justify-content:flex-start}
+.mi:last-child{border-bottom:0}
+.mi .ico{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--grad);font-size:17px}
+.mi .ch{margin-left:auto;color:var(--mut);font-size:22px;opacity:.6}
+.bdg{min-width:22px;height:22px;border-radius:11px;background:var(--red);color:#fff;font-size:13px;font-weight:700;display:inline-grid;place-items:center;padding:0 7px;margin-left:auto}
+.bdg+.ch{margin-left:6px}
+#lemp{text-align:center;padding:26px 16px;background:var(--card);border-radius:20px;box-shadow:var(--shadow);margin-top:12px}
+.fx{min-height:32px;min-width:32px;padding:0;border-radius:50%;font-size:14px}
+@media (hover:hover){.card:hover{transform:translateY(-2px)}button.p:hover{filter:brightness(1.06)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <main>
 <section id="home">
-  <h1>Mes puzzles</h1>
+  <div class="top"><h1>Mes puzzles</h1><button id="pf">Se connecter</button></div>
   <p class="sub">Transforme une photo en puzzle, reprends-le quand tu veux.</p>
-  <div class="bar"><button class="p" id="new">Nouveau puzzle</button><button id="addp">Ajouter un puzzle</button><button id="pf">Se connecter</button></div>
+  <div class="acts"><button class="p" id="new">Nouveau puzzle</button><button id="addp">Ajouter un puzzle</button></div>
   <div id="res"></div>
-  <div id="cat" class="hide"><h2 style="margin-top:22px"><button class="hb" id="hc">Puzzles proposés <span aria-hidden="true">›</span></button></h2><div id="catg" class="grid"></div></div>
-  <h2 style="margin-top:22px"><button class="hb" id="hl">Bibliothèque <span aria-hidden="true">›</span></button></h2>
+  <div id="cat" class="hide"><h2 class="sec"><button class="hb" id="hc">Puzzles proposés <span aria-hidden="true">›</span></button></h2><div id="catg" class="grid"></div></div>
+  <h2 class="sec"><button class="hb" id="hl">Bibliothèque <span aria-hidden="true">›</span></button></h2>
   <p id="lemp" class="note">Tes puzzles terminés apparaîtront ici.</p>
   <div id="lib" class="grid"></div>
 </section>
 
 <section id="allp" class="hide">
-  <div class="bar"><button id="ab">← Retour</button></div>
+  <div class="bar" style="margin-top:4px"><button class="back" id="ab"><b>‹</b> Retour</button></div>
   <h2 id="at"></h2>
   <div id="ag" class="grid"></div>
 </section>
 
 <section id="setup" class="hide">
-  <div class="bar"><button id="sb">← Retour</button></div>
+  <div class="bar" style="margin-top:4px"><button class="back" id="sb"><b>‹</b> Retour</button></div>
   <h2>Nouveau puzzle</h2>
   <label class="file p">Choisir une photo<input id="f" type="file" accept="image/*" hidden></label>
   <img id="pv" class="pv hide" alt="Photo choisie">
@@ -112,14 +229,16 @@ h3{margin:18px 0 6px}
 </section>
 
 <section id="game" class="hide">
-  <div class="bar">
-    <button id="gb">← Accueil</button>
-    <button id="ds">Disperser</button>
+  <div class="gbar">
+    <button class="back" id="gb"><b>‹</b> Accueil</button>
+    <b id="cnt"></b>
     <button id="op">Options</button>
-    <span class="zm"><button id="zo" aria-label="Zoom arrière">−</button><span id="zl">100%</span><button id="zi" aria-label="Zoom avant">+</button></span>
-    <span class="sp"></span><b id="cnt"></b>
   </div>
   <div class="stage"><svg id="sv" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="dock">
+    <button id="ds">Disperser</button>
+    <span class="zm"><button id="zo" aria-label="Zoom arrière">−</button><span id="zl">100%</span><button id="zi" aria-label="Zoom avant">+</button></span>
+  </div>
 </section>
 
 <div id="mod" class="ov hide"></div>
@@ -136,7 +255,7 @@ function fitH(){try{
 }catch(e){}}
 fitH();addEventListener('resize',fitH);addEventListener('orientationchange',()=>setTimeout(fitH,300));
 // Affiche les erreurs à l'écran (aide au dépannage)
-function dbg(m){let b=document.getElementById('dbg');if(!b){b=document.createElement('div');b.id='dbg';b.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#7b1e32;color:#fff;padding:10px;border-radius:10px;font:13px/1.4 sans-serif;white-space:pre-wrap;user-select:text';b.onclick=()=>b.remove();(document.body||document.documentElement).appendChild(b)}b.textContent+=(b.textContent?'\n':'')+m}
+function dbg(m){let b=document.getElementById('dbg');if(!b){b=document.createElement('div');b.id='dbg';b.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#3a0f4a;color:#fff;padding:10px;border-radius:10px;font:13px/1.4 sans-serif;white-space:pre-wrap;user-select:text';b.onclick=()=>b.remove();(document.body||document.documentElement).appendChild(b)}b.textContent+=(b.textContent?'\n':'')+m}
 addEventListener('error',e=>dbg('Erreur : '+e.message));
 addEventListener('unhandledrejection',e=>dbg('Erreur : '+(e.reason&&e.reason.message||e.reason)));
 // Prévention globale des gestes iOS PWA
@@ -184,22 +303,22 @@ let S={n:48,rot:false,ghost:true},cur=null,G=null,drag=null,pan=null,Z=1;
 const show=id=>{['home','setup','game','allp'].forEach(x=>$('#'+x).classList.toggle('hide',x!=id));document.body.classList.toggle('play',id=='game')};
 const closeMod=()=>$('#mod').classList.add('hide');
 const openMod=h=>{$('#mod').innerHTML='<div class="box">'+h+'</div>';$('#mod').classList.remove('hide')};
-const optHTML=(p,v)=>`<label class="row">Nombre de pièces<select id="${p}n">${NS.map(x=>`<option${x==v.n?' selected':''}>${x}</option>`).join('')}</select></label>
+const optHTML=(p,v)=>`<div class="list"><label class="row">Nombre de pièces<select id="${p}n">${NS.map(x=>`<option${x==v.n?' selected':''}>${x}</option>`).join('')}</select></label>
 <label class="row">Pièces à faire tourner (90° au toucher)<input type="checkbox" id="${p}r"${v.rot?' checked':''}></label>
-<label class="row">Aperçu en filigrane<input type="checkbox" id="${p}g"${v.ghost?' checked':''}></label>`;
+<label class="row">Aperçu en filigrane<input type="checkbox" id="${p}g"${v.ghost?' checked':''}></label></div>`;
 
 /* Accueil */
 async function home(){
   G=null;closeMod();show('home');
   const sg=await get('game');
-  $('#res').innerHTML=sg?`<button class="card res" id="rs"><img src="${sg.thumb||''}" alt=""><span><b>Reprendre le puzzle</b><br>${sg.P.filter(p=>p.d).length} / ${sg.n} pièces placées</span></button>`:'';
+  $('#res').innerHTML=sg?`<button class="card res" id="rs"><img src="${sg.thumb||''}" alt=""><span class="rt"><b>Reprendre le puzzle</b>${sg.P.filter(p=>p.d).length} / ${sg.n} pièces placées<i class="pg"><i style="width:${Math.round(100*sg.P.filter(p=>p.d).length/sg.n)}%"></i></i></span><span class="ch" aria-hidden="true">›</span></button>`:'';
   if(sg)$('#rs').onclick=async()=>{G={...sg,img:await get('img:'+sg.id)};start()};
   LIB=(await all('lib:')).sort((a,b)=>b.date-a.date);CUR='';renderPrev();
 }
 async function libView(x){
   const src=await get('img:'+x.id);
   openMod(`<img src="${src||x.thumb}" alt="Puzzle terminé"><p>${x.n} pièces · ${fmt(x.time)} · ${new Date(x.date).toLocaleDateString('fr-FR')}</p>
-  <div class="bar"><button class="p" id="rp"${src?'':' disabled'}>Rejouer cette photo</button><button id="rm">Supprimer</button><button id="cl">Fermer</button></div>`);
+  <div class="bar"><button class="p" id="rp"${src?'':' disabled'}>Rejouer cette photo</button><button class="dg" id="rm">Supprimer</button><button id="cl">Fermer</button></div>`);
   $('#cl').onclick=closeMod;
   $('#rp').onclick=()=>{closeMod();openSetup(src)};
   $('#rm').onclick=async()=>{await del('lib:'+x.id);await del('img:'+x.id);if(sb&&U)sb.from('completions').delete().eq('user_id',U.id).eq('local_id',String(x.id)).then(()=>{});LIB=LIB.filter(y=>y.id!=x.id);if(CUR==='lib'){closeMod();openAll('lib')}else home()};
@@ -252,7 +371,7 @@ function render(){
     p.d?dn+=e:fr+=e;
   });
   G.base=[-m,-m,W+2*m,H+2*m];resetView();
-  sv.innerHTML=`<defs>${defs}</defs><rect width="${W}" height="${H}" fill="none" stroke="#9c4a5a" stroke-opacity=".6" stroke-dasharray="6 5"/><use id="gho" href="#ph" opacity=".16"/><g id="dn">${dn}</g><g id="fr">${fr}</g>`;
+  sv.innerHTML=`<defs>${defs}</defs><rect width="${W}" height="${H}" fill="none" stroke="#a05ae0" stroke-opacity=".7" stroke-dasharray="6 5"/><use id="gho" href="#ph" opacity=".16"/><g id="dn">${dn}</g><g id="fr">${fr}</g>`;
   sv.querySelectorAll('.pc').forEach(e=>G.P[+e.dataset.i].el=e);
   ghost();cnt();
 }
@@ -397,7 +516,7 @@ $('#ds').onclick=()=>{
 /* Options en cours de partie */
 $('#op').onclick=()=>{
   openMod(`<h2>Options</h2>${optHTML('m',{n:G.n,rot:G.rot,ghost:G.ghost})}
-  <div class="bar"><button id="mre">Recommencer avec ce nombre</button><button id="mab">Abandonner</button><button class="p" id="mx">Fermer</button></div>
+  <div class="bar"><button id="mre">Recommencer avec ce nombre</button><button class="dg" id="mab">Abandonner</button><button class="p" id="mx">Fermer</button></div>
   <p class="note">Changer le nombre de pièces relance le puzzle avec la même photo.</p><p class="note">Zoom : pince avec deux doigts, molette ou boutons +/−. Fais glisser le fond pour te déplacer.</p>`);
   $('#mx').onclick=closeMod;
   $('#mg').onchange=e=>{G.ghost=S.ghost=e.target.checked;ghost();put('settings',S);save()};
@@ -524,13 +643,13 @@ async function pullGame(){
   }else if(loc&&(!data||(loc.savedAt||0)>ct)){gLast=loc;pushGame()}
 }
 async function myPuzzles(){
-  openMod('<h2>Mes puzzles ajoutés</h2><div id="mpl"><p class="note">Chargement…</p></div><div class="bar"><button id="mb">← Retour au profil</button></div>');
+  openMod('<h2>Mes puzzles ajoutés</h2><div id="mpl"><p class="note">Chargement…</p></div><div class="bar"><button id="mb">Retour au profil</button></div>');
   $('#mb').onclick=()=>profView();
   const{data,error}=await sb.from('puzzles').select('id,title,image_path').eq('author_id',U.id).order('created_at',{ascending:false});
   const box=$('#mpl');if(!box)return;
   if(error){box.innerHTML='<p class="note">Erreur : '+esc(error.message)+'</p>';return}
   if(!data.length){box.innerHTML='<p class="note">Tu n’as pas encore ajouté de puzzle.</p>';return}
-  box.innerHTML=data.map((x,i)=>`<div class="mp"><img src="${esc(sb.storage.from('puzzles').getPublicUrl(x.image_path).data.publicUrl)}" alt=""><span>${esc(x.title)}</span><button data-i="${i}">Supprimer</button></div>`).join('');
+  box.innerHTML=data.map((x,i)=>`<div class="mp"><img src="${esc(sb.storage.from('puzzles').getPublicUrl(x.image_path).data.publicUrl)}" alt=""><span>${esc(x.title)}</span><button class="dg" data-i="${i}">Supprimer</button></div>`).join('');
   box.querySelectorAll('button').forEach(b=>b.onclick=async()=>{const x=data[+b.dataset.i];await delPuz({id:x.id,title:x.title,path:x.image_path});myPuzzles()});
 }
 function pushRec(x){if(sb&&U)sb.from('completions').upsert(recRow(x),recOpt).then(()=>{})}
@@ -543,9 +662,9 @@ async function prof(){
 function authView(mode,note){
   const su=mode==='signup',fg=mode==='forgot';
   openMod(`<h2>${fg?'Mot de passe oublié':su?'Créer un compte':'Se connecter'}</h2>${note?`<p class="note">${note}</p>`:''}
-  ${fg?'':`<label class="row">Pseudo<input id="au" maxlength="24" autocomplete="username"></label>`}
+  <div class="list">${fg?'':`<label class="row">Pseudo<input id="au" maxlength="24" autocomplete="username"></label>`}
   ${su||fg?`<label class="row">E-mail<input id="ae" type="email" autocomplete="email"></label>`:''}
-  ${fg?'':`<label class="row">Mot de passe<input id="ap" type="password" autocomplete="${su?'new-password':'current-password'}"></label>`}
+  ${fg?'':`<label class="row">Mot de passe<input id="ap" type="password" autocomplete="${su?'new-password':'current-password'}"></label>`}</div>
   <p id="am" class="note" role="status"></p>
   <div class="bar"><button class="p" id="authgo">${fg?'Envoyer le lien':su?'Créer mon compte':'Se connecter'}</button><button id="ax">Fermer</button></div>
   <div class="bar">${mode==='login'?'<button id="m1">Créer un compte</button><button id="m2">Mot de passe oublié</button>':'<button id="m1">Retour à la connexion</button>'}</div>`);
@@ -574,17 +693,17 @@ function authView(mode,note){
   }catch(e){msg('Erreur : '+e.message)}};
 }
 function newPwView(){
-  openMod(`<h2>Nouveau mot de passe</h2><label class="row">Mot de passe<input id="np" type="password" autocomplete="new-password"></label><p id="am" class="note" role="status"></p><div class="bar"><button class="p" id="authgo">Enregistrer</button></div>`);
+  openMod(`<h2>Nouveau mot de passe</h2><div class="list"><label class="row">Mot de passe<input id="np" type="password" autocomplete="new-password"></label></div><p id="am" class="note" role="status"></p><div class="bar"><button class="p" id="authgo">Enregistrer</button></div>`);
   $('#authgo').onclick=async()=>{const{error}=await sb.auth.updateUser({password:$('#np').value});if(error)return msg('Échec : '+error.message);closeMod();alert('Mot de passe modifié.')};
 }
 async function profView(){
   openMod(`<div style="text-align:center"><span class="av big">${esc((UN||'?')[0].toUpperCase())}</span><h2>${esc(UN)}</h2></div>
   <div class="menu">
-    <button class="mi" id="m_r">Records <span class="ch">›</span></button>
-    <button class="mi" id="m_a">Amis <b class="bdg hide" id="bd"></b><span class="ch">›</span></button>
-    <button class="mi" id="m_p">Mes puzzles ajoutés <span class="ch">›</span></button>
+    <button class="mi" id="m_r"><span class="ico">🏆</span>Records <span class="ch">›</span></button>
+    <button class="mi" id="m_a"><span class="ico">👥</span>Amis <b class="bdg hide" id="bd"></b><span class="ch">›</span></button>
+    <button class="mi" id="m_p"><span class="ico">🧩</span>Mes puzzles ajoutés <span class="ch">›</span></button>
   </div>
-  <div class="bar"><button id="lo">Se déconnecter</button><button class="p" id="ax">Fermer</button></div>`);
+  <div class="bar"><button class="p" id="ax">Fermer</button><button class="dg" id="lo">Se déconnecter</button></div>`);
   $('#ax').onclick=closeMod;$('#lo').onclick=async()=>{await sb.auth.signOut();closeMod()};
   $('#m_r').onclick=()=>subView('Records',renderRec);
   $('#m_a').onclick=()=>subView('Amis',renderFr);
@@ -593,7 +712,7 @@ async function profView(){
     .then(({count})=>{const b=$('#bd');if(b&&count){b.textContent=count;b.classList.remove('hide')}});
 }
 function subView(title,fn){
-  openMod(`<h2>${title}</h2><div id="pb"><p class="note">Chargement…</p></div><div class="bar"><button id="mb">← Retour au profil</button></div>`);
+  openMod(`<h2>${title}</h2><div id="pb"><p class="note">Chargement…</p></div><div class="bar"><button id="mb">Retour au profil</button></div>`);
   $('#mb').onclick=()=>profView();fn();
 }
 async function social(rec){
@@ -621,12 +740,11 @@ async function renderRec(){
 async function renderFr(){
   const box=$('#pb');if(!box)return;
   const{F,me,other,ok,inc,out}=await social(false);
-  box.innerHTML=`${inc.length?'<h3>Demandes d’amis</h3>':''}
-  ${inc.map(f=>`<div class="row"><span>${esc(other(f).n)}</span><span><button class="p fa" data-f="${f.id}">Accepter</button> <button class="fd" data-f="${f.id}">Refuser</button></span></div>`).join('')}
-  <h3>Mes amis</h3>
-  ${ok.map(a=>`<div class="row"><span>${av(a.n)}${esc(a.n)}</span><button class="fx" data-f="${a.fid}" data-n="${esc(a.n)}" aria-label="Retirer ${esc(a.n)}">✕</button></div>`).join('')||'<p class="note">Pas encore d’amis.</p>'}
-  ${out.map(f=>`<div class="row"><span class="note">Demande envoyée à ${esc(other(f).n)}</span><button class="fd" data-f="${f.id}">Annuler</button></div>`).join('')}
-  <div class="row"><input id="fn" placeholder="Pseudo d’un ami" style="width:60%"><button id="fadd">Ajouter</button></div><p id="am" class="note" role="status"></p>`;
+  const lst=(h,r)=>r.length?(h?'<h3>'+h+'</h3>':'')+'<div class="list">'+r.join('')+'</div>':'';
+  box.innerHTML=lst('Demandes d’amis',inc.map(f=>`<div class="row"><span>${esc(other(f).n)}</span><span style="display:flex;gap:8px"><button class="p fa" data-f="${f.id}" style="min-height:36px;padding:0 14px;font-size:14px">Accepter</button><button class="fd" data-f="${f.id}" style="min-height:36px;padding:0 14px;font-size:14px">Refuser</button></span></div>`))
+  +'<h3>Mes amis</h3>'
+  +(ok.length||out.length?lst('',ok.map(a=>`<div class="row"><span>${av(a.n)}${esc(a.n)}</span><button class="fx" data-f="${a.fid}" data-n="${esc(a.n)}" aria-label="Retirer ${esc(a.n)}">✕</button></div>`).concat(out.map(f=>`<div class="row"><span class="note">Demande envoyée à ${esc(other(f).n)}</span><button class="fd" data-f="${f.id}" style="min-height:36px;padding:0 14px;font-size:14px">Annuler</button></div>`))):'<p class="note" style="margin-left:16px">Pas encore d’amis.</p>')
+  +`<h3>Ajouter un ami</h3><div class="list"><div class="row"><input class="l" id="fn" placeholder="Pseudo d’un ami"><button id="fadd" style="min-height:36px;padding:0 14px;font-size:14px">Ajouter</button></div></div><p id="am" class="note" role="status" style="margin-left:16px"></p>`;
   box.querySelectorAll('.fa').forEach(b=>b.onclick=async()=>{await sb.from('friendships').update({status:'accepted'}).eq('id',b.dataset.f);renderFr()});
   box.querySelectorAll('.fd').forEach(b=>b.onclick=async()=>{await sb.from('friendships').delete().eq('id',b.dataset.f);renderFr()});
   box.querySelectorAll('.fx').forEach(b=>b.onclick=async()=>{
@@ -649,7 +767,7 @@ function addView(){
   openMod(`<h2>Ajouter un puzzle</h2><p class="note">Il sera visible par tous dans « Puzzles proposés ».</p>
   <label class="file p">Choisir une photo<input id="uf" type="file" accept="image/*" hidden></label>
   <img id="upv" class="pv hide" alt="Photo choisie">
-  <label class="row">Titre<input id="ut" maxlength="80"></label><p id="am" class="note"></p>
+  <div class="list"><label class="row">Titre<input id="ut" maxlength="80"></label></div><p id="am" class="note"></p>
   <div class="bar"><button class="p" id="ub" disabled>Publier</button><button id="ux">Annuler</button></div>`);
   $('#ux').onclick=closeMod;
   $('#uf').onchange=e=>{
